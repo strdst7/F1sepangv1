@@ -124,6 +124,14 @@ const photo = (
 });
 
 export const DEMO_PHOTOS: PhotoItem[] = [
+  photo("demo-photo-18", "KD pit portrait", image("ambassador-pit-portrait.jpeg"), "paddock", "demo-event-5", 132, 0, "A KD ambassador between garage runs."),
+  photo("demo-photo-19", "Pit-lane walk", image("female-pit-walk.jpeg"), "pit-lane", "demo-event-3", 154, 0, "Walking the line before the next session."),
+  photo("demo-photo-20", "Helmet check", image("male-helmet-pit.jpeg"), "detail", "demo-event-1", 119, 0, "Driver and helmet ready for the next run."),
+  photo("demo-photo-21", "Crew together", image("crew-group-pit.jpeg"), "fan-moment", "demo-event-2", 188, 0, "The KD crew in the pit lane."),
+  photo("demo-photo-22", "Race-day announcement", image("ambassador-announcer.jpeg"), "fan-moment", "demo-event-3", 167, 0, "Live from the Sepang pit wall."),
+  photo("demo-photo-23", "Garage-side wrench", image("female-pit-wrench.jpeg"), "pit-lane", "demo-event-5", 146, 0, "A quiet setup moment before lights out."),
+  photo("demo-photo-24", "Pit-stop focus", image("male-pit-stop.jpeg"), "pit-lane", "demo-event-1", 173, 0, "Hands, tools and a fast turnaround."),
+  photo("demo-photo-25", "Pit-wall ambassador", image("female-pit-wall.jpeg"), "paddock", "demo-event-2", 141, 0, "Ready for the next fan walk."),
   photo("demo-photo-15", "Wet grid, KD car", image("sepang-car-wet.webp"), "trackside", "demo-event-1", 218, 0, "The KD machine cuts through a wet Sepang corner."),
   photo("demo-photo-16", "Three-car formation", image("sepang-grid-race.webp"), "trackside", "demo-event-1", 196, 0, "Three KD cars running together under the Sepang grandstand."),
   photo("demo-photo-17", "Sepang from above", image("sepang-aerial-circuit.webp"), "drone", "demo-event-4", 241, 0, "Aerial pass over the circuit, grandstands and tropical straight."),

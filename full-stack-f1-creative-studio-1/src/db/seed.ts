@@ -102,6 +102,14 @@ const px = (
 ) => ({ title, url, category, eventId, likes, caption, createdBy: lead.id, createdAt: at(dayOffset, 16) });
 
 const PHOTOS = [
+  px("KD pit portrait", "/images/ambassador-pit-portrait.jpeg", "paddock", e5.id, 132, 0, "A KD ambassador between garage runs."),
+  px("Pit-lane walk", "/images/female-pit-walk.jpeg", "pit-lane", e3.id, 154, 0, "Walking the line before the next session."),
+  px("Helmet check", "/images/male-helmet-pit.jpeg", "detail", e1.id, 119, 0, "Driver and helmet ready for the next run."),
+  px("Crew together", "/images/crew-group-pit.jpeg", "fan-moment", e2.id, 188, 0, "The KD crew in the pit lane."),
+  px("Race-day announcement", "/images/ambassador-announcer.jpeg", "fan-moment", e3.id, 167, 0, "Live from the Sepang pit wall."),
+  px("Garage-side wrench", "/images/female-pit-wrench.jpeg", "pit-lane", e5.id, 146, 0, "A quiet setup moment before lights out."),
+  px("Pit-stop focus", "/images/male-pit-stop.jpeg", "pit-lane", e1.id, 173, 0, "Hands, tools and a fast turnaround."),
+  px("Pit-wall ambassador", "/images/female-pit-wall.jpeg", "paddock", e2.id, 141, 0, "Ready for the next fan walk."),
   px("Wet grid, KD car", "/images/sepang-car-wet.webp", "trackside", e1.id, 218, 0, "The KD machine cuts through a wet Sepang corner."),
   px("Three-car formation", "/images/sepang-grid-race.webp", "trackside", e1.id, 196, 0, "Three KD cars running together under the Sepang grandstand."),
   px("Sepang from above", "/images/sepang-aerial-circuit.webp", "drone", e4.id, 241, 0, "Aerial pass over the circuit, grandstands and tropical straight."),
