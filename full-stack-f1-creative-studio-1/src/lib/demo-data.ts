@@ -124,6 +124,10 @@ const photo = (
 });
 
 export const DEMO_PHOTOS: PhotoItem[] = [
+  photo("demo-photo-11", "Pit wall briefing", image("pit-wall-briefing.jpeg"), "pit-lane", "demo-event-3", 176, 0, "The KD crew resets between runs in the Sepang pit lane."),
+  photo("demo-photo-12", "Crew conversation, garage 7", image("pit-lane-crew.jpeg"), "pit-lane", "demo-event-1", 121, 0, "A quiet moment before the next pit-lane push."),
+  photo("demo-photo-13", "Pit radio interview", image("pit-radio-interview.jpeg"), "fan-moment", "demo-event-3", 148, 0, "Live from the garage lane with the KD crew."),
+  photo("demo-photo-14", "Golden car, Sepang straight", image("sepang-golden-car.jpeg"), "trackside", "demo-event-6", 204, 0, "Neon lime through the palms at golden hour."),
   photo("demo-photo-1", "Chequered moment, T103", image("hero.jpg"), "trackside", "demo-event-1", 128, 1, "Low angle, floodlights coming up — the KD machine on the line."),
   photo("demo-photo-2", "Monsoon session, full wets", image("mockup-rain.jpg"), "trackside", "demo-event-6", 143, 2, "Sepang rain does what it wants."),
   photo("demo-photo-3", "Neon pit, 2 AM", image("mockup-pit.jpg"), "pit-lane", "demo-event-3", 89, 3, "Mist, neon and a crew still wide awake."),

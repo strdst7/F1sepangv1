@@ -102,6 +102,10 @@ const px = (
 ) => ({ title, url, category, eventId, likes, caption, createdBy: lead.id, createdAt: at(dayOffset, 16) });
 
 const PHOTOS = [
+  px("Pit wall briefing", "/images/pit-wall-briefing.jpeg", "pit-lane", e3.id, 176, 0, "The KD crew resets between runs in the Sepang pit lane."),
+  px("Crew conversation, garage 7", "/images/pit-lane-crew.jpeg", "pit-lane", e1.id, 121, 0, "A quiet moment before the next pit-lane push."),
+  px("Pit radio interview", "/images/pit-radio-interview.jpeg", "fan-moment", e3.id, 148, 0, "Live from the garage lane with the KD crew."),
+  px("Golden car, Sepang straight", "/images/sepang-golden-car.jpeg", "trackside", e6.id, 204, 0, "Neon lime through the palms at golden hour."),
   px("Chequered moment, T103", "https://images.pexels.com/photos/29252117/pexels-photo-29252117.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200", "trackside", e1.id, 128, -1, "1/4000 · f/2.8 · ISO 200 — sparks at the line"),
   px("Turn 4 dive — brake lights", "https://images.pexels.com/photos/28680795/pexels-photo-28680795.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200", "trackside", e1.id, 96, -2, "Heavy into the 4th, 312 km/h out"),
   px("Chicane exit, 312 km/h", "https://images.pexels.com/photos/28832062/pexels-photo-28832062.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200", "trackside", e1.id, 74, -2, "Pan shot, 1/2000 at full throttle"),

@@ -26,7 +26,7 @@ export async function GET() {
     });
   } catch {
     return NextResponse.json({
-      photos: DEMO_PHOTOS,
+      photos: DEMO_PHOTOS.slice(0, 10),
       videos: DEMO_VIDEOS.slice(0, 3),
       mockups: DEMO_MOCKUPS.filter((item) => item.status === "ready").slice(0, 4),
     });
