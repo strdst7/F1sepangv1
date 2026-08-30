@@ -1,11 +1,15 @@
-import { NextResponse, type NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { users } from "@/db/schema";
 import {
+  createDemoSession,
   createSession,
+  DEMO_USER,
   destroySession,
   getSessionUser,
+  isDemoCredentials,
   verifyPassword,
 } from "@/lib/auth";
 
@@ -17,6 +21,14 @@ async function body(req: NextRequest) {
   } catch {
     return {};
   }
+}
+
+function demoLoginResponse() {
+  return NextResponse.json({
+    ok: true,
+    user: DEMO_USER,
+    demo: true,
+  });
 }
 
 export async function POST(
@@ -34,22 +46,43 @@ export async function POST(
         { error: "Email and password are required." },
         { status: 400 }
       );
-    const rows = await db
-      .select()
-      .from(users)
-      .where(eq(users.email, email))
-      .limit(1);
-    const user = rows[0];
-    if (!user || !verifyPassword(password, user.passwordHash))
+
+    try {
+      const rows = await db
+        .select()
+        .from(users)
+        .where(eq(users.email, email))
+        .limit(1);
+      const user = rows[0];
+
+      // A fresh database may not have been seeded yet. The public demo pass
+      // should still let visitors into the read-only studio.
+      if (!user && isDemoCredentials(email, password)) {
+        await createDemoSession();
+        return demoLoginResponse();
+      }
+
+      if (!user || !verifyPassword(password, user.passwordHash))
+        return NextResponse.json(
+          { error: "Wrong email or password. Check the pit board and try again." },
+          { status: 401 }
+        );
+      await createSession(user.id);
+      return NextResponse.json({
+        ok: true,
+        user: { id: user.id, name: user.name, email: user.email, role: user.role },
+      });
+    } catch {
+      // Keep the documented demo credentials usable while Postgres is down.
+      if (isDemoCredentials(email, password)) {
+        await createDemoSession();
+        return demoLoginResponse();
+      }
       return NextResponse.json(
-        { error: "Wrong email or password. Check the pit board and try again." },
-        { status: 401 }
+        { error: "The studio database is offline. Use the demo crew pass or try again later." },
+        { status: 503 }
       );
-    await createSession(user.id);
-    return NextResponse.json({
-      ok: true,
-      user: { id: user.id, name: user.name, email: user.email, role: user.role },
-    });
+    }
   }
 
   if (action === "logout") {

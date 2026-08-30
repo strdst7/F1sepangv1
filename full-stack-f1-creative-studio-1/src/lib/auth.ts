@@ -5,7 +5,28 @@ import { db } from "@/db";
 import { authSessions, users } from "@/db/schema";
 
 const COOKIE = "kd_session";
+const DEMO_COOKIE = "kd_demo_session";
+const DEMO_COOKIE_VALUE = "demo-crew";
 const SEVEN_DAYS = 7 * 24 * 60 * 60;
+
+export type SessionUser = {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+};
+
+/** Public demo credentials shown on the sign-in screen. */
+export const DEMO_USER: SessionUser = {
+  id: "demo-user",
+  name: "Aina Rahman",
+  email: "crew@krackeddevs.com",
+  role: "lead",
+};
+
+export function isDemoCredentials(email: string, password: string): boolean {
+  return email === DEMO_USER.email && password === "kracked2026";
+}
 
 export function hashPassword(password: string): string {
   const salt = randomBytes(16).toString("hex");
@@ -26,6 +47,17 @@ export function verifyPassword(
   );
 }
 
+export async function createDemoSession(): Promise<void> {
+  const jar = await cookies();
+  jar.set(DEMO_COOKIE, DEMO_COOKIE_VALUE, {
+    httpOnly: true,
+    sameSite: "lax",
+    path: "/",
+    maxAge: SEVEN_DAYS,
+    secure: process.env.NODE_ENV === "production",
+  });
+}
+
 export async function createSession(userId: string): Promise<string> {
   const token = randomBytes(32).toString("hex");
   const expiresAt = new Date(Date.now() + SEVEN_DAYS * 1000);
@@ -36,19 +68,15 @@ export async function createSession(userId: string): Promise<string> {
     sameSite: "lax",
     path: "/",
     maxAge: SEVEN_DAYS,
+    secure: process.env.NODE_ENV === "production",
   });
   return token;
 }
 
-export type SessionUser = {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-};
-
 export async function getSessionUser(): Promise<SessionUser | null> {
   const jar = await cookies();
+  if (jar.get(DEMO_COOKIE)?.value === DEMO_COOKIE_VALUE) return DEMO_USER;
+
   const token = jar.get(COOKIE)?.value;
   if (!token) return null;
 
@@ -91,4 +119,5 @@ export async function destroySession(): Promise<void> {
     }
   }
   jar.delete(COOKIE);
+  jar.delete(DEMO_COOKIE);
 }
