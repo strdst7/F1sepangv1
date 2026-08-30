@@ -1,0 +1,80 @@
+#!/usr/bin/env tsx
+/**
+ * Prebuild script to generate KD brand images.
+ * Run during Vercel build to ensure public/images exist.
+ */
+import { writeFileSync, existsSync, mkdirSync } from "fs";
+import { join } from "path";
+const PUBLIC_DIR = join(process.cwd(), "public", "images");
+// Ensure directory exists
+if (!existsSync(PUBLIC_DIR)) {
+  mkdirSync(PUBLIC_DIR, { recursive: true });
+}
+// Image definitions with their prompts
+const IMAGES = [
+  {
+    name: "hero.jpg",
+    prompt: `Cinematic wide motorsport photograph at Sepang International Circuit at dusk. A matte black open-wheel Formula 1 style race car with vivid neon lime-green (#A3E635) livery accents and "Kracked Devs" wordmark on the sidepod, surrounded by pit crew members in black racing suits with neon green stripes. Dramatic low angle, moody teal-and-dark atmosphere, warm floodlights, subtle motion energy, professional F1 pit lane photography, ultra detailed, no text other than livery.`,
+  },
+  {
+    name: "mockup-rain.jpg",
+    prompt: `AI cinematic concept render of a matte black Formula 1 style car with neon lime green (#A3E635) accents drifting through a rain-soaked tropical race circuit at night, huge water spray glowing, green neon livery reflections on wet asphalt, dramatic rim lighting, cinematic color grade, ultra detailed 16:9 concept art.`,
+  },
+  {
+    name: "mockup-pit.jpg",
+    prompt: `Futuristic neon-lit pit lane at night, matte black Formula 1 style car with neon lime green (#A3E635) livery, glowing acid-green and deep purple neon strips on the pit wall, mist and haze, pit crew silhouettes in black and green suits, cyber-motorsport AI concept art, cinematic 16:9.`,
+  },
+  {
+    name: "mockup-sunset.jpg",
+    prompt: `Golden hour cinematic shot of a matte black Formula 1 style car with neon lime green (#A3E635) livery speeding on a tropical forest straight at Sepang Malaysia, palm trees and blurred green jungle in background, long exposure motion blur, warm orange sun flare, dust spray from the tires, AI concept render, 16:9.`,
+  },
+  {
+    name: "kd-suit.jpg",
+    prompt: `Vertical portrait photograph of a female motorsport presenter in a matte black racing suit with neon lime green (#A3E635) panels and accents, "Kracked Devs" text across the chest in white and lime green, black racing gloves, sunglasses, holding a microphone, standing in a sunlit F1 pit lane with green "KD" sponsor boards and racing garages behind, photorealistic, bright daylight, detailed fabric texture, portrait 3:4 composition.`,
+  },
+  {
+    name: "kd-grandstand.jpg",
+    prompt: `Wide landscape photograph of a grandstand at Sepang circuit with a dramatic golden umbrella-like petal canopy roof, a tall dark tower with a large "KRACKED DEVS" banner in white and neon lime green text, red and white kerbs curving along the asphalt in the foreground, palm trees, dramatic storm clouds with sunlight breaking through, photorealistic, 16:9.`,
+  },
+];
+// For Vercel/build environments without the generate_image tool,
+// we'll download from Pollinations as a fallback
+async function generateOrDownload(name: string, prompt: string): Promise<void> {
+  const filepath = join(PUBLIC_DIR, name);
+  
+  // Skip if already exists
+  if (existsSync(filepath)) {
+    console.log(`✓ ${name} already exists`);
+    return;
+  }
+  console.log(`Generating ${name}...`);
+  
+  try {
+    // Use Pollinations API to generate and download
+    const encodedPrompt = encodeURIComponent(prompt);
+    const url = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1024&height=768&seed=42&model=flux&nologo=true`;
+    
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    
+    const buffer = Buffer.from(await response.arrayBuffer());
+    writeFileSync(filepath, buffer);
+    console.log(`✓ Generated ${name} (${(buffer.length / 1024).toFixed(1)} KB)`);
+  } catch (err) {
+    console.error(`✗ Failed to generate ${name}:`, err);
+    process.exit(1);
+  }
+}
+async function main() {
+  console.log("Generating KD brand images...\n");
+  
+  for (const { name, prompt } of IMAGES) {
+    await generateOrDownload(name, prompt);
+  }
+  
+  console.log("\n✓ All images ready for build");
+}
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});
