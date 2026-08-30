@@ -94,13 +94,16 @@ export function kdImageFor(o: CreatorOpts): string {
   switch (o.product) {
     case "racing-suit":
     case "helmet":
-      return "/images/kd-suit.jpg";
+      // Use the uploaded KD pit-wall portrait as a clean, real source image.
+      // The old generated suit already contained brand copy, which caused the
+      // canvas labels to appear duplicated in the final render.
+      return "/images/pit-wall-briefing.jpeg";
     case "car":
-      if (o.scene === "neon") return "/images/mockup-rain.jpg";
-      if (o.scene === "golden-hour" || o.scene === "trackside") return "/images/mockup-sunset.jpg";
-      return "/images/hero.jpg";
+      if (o.scene === "neon") return "/images/sepang-car-wet.webp";
+      if (o.scene === "golden-hour" || o.scene === "trackside") return "/images/sepang-golden-car.jpeg";
+      return "/images/sepang-grid-race.webp";
     case "poster":
-      return "/images/kd-grandstand.jpg";
+      return "/images/sepang-aerial-circuit.webp";
   }
 }
 
@@ -123,6 +126,63 @@ type Spec = {
   color: string;
   glow?: boolean;
 };
+
+/**
+ * Add one restrained creator plate instead of painting large duplicate brand
+ * copy over an already-branded source photograph.
+ */
+function drawCreatorPlate(
+  ctx: CanvasRenderingContext2D,
+  tw: number,
+  th: number,
+  name: string,
+  number: string,
+  sponsor: string,
+  accent: string,
+  dark: string,
+  white: string
+) {
+  const plateH = Math.max(76, Math.round(th * 0.105));
+  const y = th - plateH;
+  const padX = Math.round(tw * 0.05);
+  const accentBar = Math.max(8, Math.round(tw * 0.012));
+
+  const gradient = ctx.createLinearGradient(0, y, 0, th);
+  gradient.addColorStop(0, "rgba(6,8,6,0.68)");
+  gradient.addColorStop(1, "rgba(6,8,6,0.94)");
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, y, tw, plateH);
+  ctx.fillStyle = accent;
+  ctx.fillRect(0, y, accentBar, plateH);
+
+  ctx.textBaseline = "middle";
+  ctx.textAlign = "left";
+  ctx.lineJoin = "round";
+  ctx.shadowBlur = 0;
+  ctx.strokeStyle = dark;
+
+  const nameSize = Math.max(20, Math.round(th * 0.045));
+  ctx.font = `900 ${nameSize}px "Chakra Petch", "Arial Black", sans-serif`;
+  ctx.lineWidth = Math.max(2, nameSize * 0.08);
+  ctx.strokeText(name, padX, y + plateH * 0.39);
+  ctx.fillStyle = accent;
+  ctx.fillText(name, padX, y + plateH * 0.39);
+
+  const sponsorSize = Math.max(12, Math.round(th * 0.022));
+  ctx.font = `600 ${sponsorSize}px "IBM Plex Mono", monospace`;
+  ctx.lineWidth = Math.max(1, sponsorSize * 0.05);
+  ctx.strokeText(sponsor, padX, y + plateH * 0.76);
+  ctx.fillStyle = white;
+  ctx.fillText(sponsor, padX, y + plateH * 0.76);
+
+  const numberSize = Math.max(28, Math.round(th * 0.075));
+  ctx.textAlign = "right";
+  ctx.font = `900 ${numberSize}px "Chakra Petch", "Arial Black", sans-serif`;
+  ctx.lineWidth = Math.max(2, numberSize * 0.08);
+  ctx.strokeText(`#${number}`, tw - padX, y + plateH * 0.53);
+  ctx.fillStyle = accent;
+  ctx.fillText(`#${number}`, tw - padX, y + plateH * 0.53);
+}
 
 /**
  * Render the KD image for the chosen product in the chosen aspect,
@@ -175,20 +235,12 @@ export async function composeKdImage(o: CreatorOpts, seed: number): Promise<stri
   const specs: Spec[] = [];
   switch (o.product) {
     case "racing-suit":
-      specs.push({ text: "KRACKED DEVS", x: 0.5, y: 0.4 + jitter, size: 0.075, color: white });
-      specs.push({ text: sponsor, x: 0.5, y: 0.5 + jitter, size: 0.045, color: white, glow: false });
-      specs.push({ text: name, x: 0.5, y: 0.62, size: 0.09, color: accent, glow: true });
-      specs.push({ text: number, x: 0.78, y: 0.22, size: 0.14, color: accent, glow: true });
-      break;
     case "helmet":
-      specs.push({ text: sponsor, x: 0.5, y: 0.14, size: 0.06, color: accent });
-      specs.push({ text: number, x: 0.5, y: 0.45 + jitter, size: 0.2, color: accent, glow: true });
-      specs.push({ text: name, x: 0.5, y: 0.58, size: 0.07, color: white });
+      // The uploaded source already carries the KD brand marks. Keep the
+      // creator-specific information in one clean lower-third plate.
       break;
     case "car":
-      specs.push({ text: number, x: 0.28, y: 0.42 + jitter, size: 0.22, color: accent, glow: true });
-      specs.push({ text: sponsor, x: 0.66, y: 0.56, size: 0.06, color: white });
-      specs.push({ text: name, x: 0.5, y: 0.72, size: 0.05, color: white });
+      specs.push({ text: number, x: 0.28, y: 0.42 + jitter, size: 0.16, color: accent, glow: true });
       break;
     case "poster":
       specs.push({ text: sponsor, x: 0.5, y: 0.14, size: 0.075, color: white, glow: true });
@@ -216,6 +268,10 @@ export async function composeKdImage(o: CreatorOpts, seed: number): Promise<stri
     ctx.fillStyle = s.color;
     ctx.fillText(s.text, s.x * tw, s.y * th);
     ctx.shadowBlur = 0;
+  }
+
+  if (o.product === "racing-suit" || o.product === "helmet" || o.product === "car") {
+    drawCreatorPlate(ctx, tw, th, name, number, sponsor, accent, dark, white);
   }
 
   return canvas.toDataURL("image/jpeg", 0.88);
