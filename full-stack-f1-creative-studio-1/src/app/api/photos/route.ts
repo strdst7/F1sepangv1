@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { desc, eq, or, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { events, photos } from "@/db/schema";
+import { DEMO_PHOTOS } from "@/lib/demo-data";
 import { getSessionUser } from "@/lib/auth";
 
 export const runtime = "nodejs";
@@ -18,20 +19,25 @@ export async function GET(req: NextRequest) {
       sql`lower(${photos.title}) like ${`%${q}%`} or lower(coalesce(${photos.caption}, '')) like ${`%${q}%`}`
     );
 
-  const rows = await db
-    .select({ photo: photos, eventLabel: events.name })
-    .from(photos)
-    .leftJoin(events, eq(photos.eventId, events.id))
-    .where(conditions.length ? (conditions.length === 1 ? conditions[0] : or(...conditions)) : undefined)
-    .orderBy(desc(photos.createdAt));
+  try {
+    const rows = await db
+      .select({ photo: photos, eventLabel: events.name })
+      .from(photos)
+      .leftJoin(events, eq(photos.eventId, events.id))
+      .where(conditions.length ? (conditions.length === 1 ? conditions[0] : or(...conditions)) : undefined)
+      .orderBy(desc(photos.createdAt));
 
-  return NextResponse.json({
-    items: rows.map((r) => ({
-      ...r.photo,
-      eventLabel: r.eventLabel,
-      createdAt: r.photo.createdAt,
-    })),
-  });
+    return NextResponse.json({
+      items: rows.map((r) => ({
+        ...r.photo,
+        eventLabel: r.eventLabel,
+        createdAt: r.photo.createdAt,
+      })),
+    });
+  } catch {
+    // Read-only demo fallback keeps the library populated without Postgres.
+    return NextResponse.json({ items: DEMO_PHOTOS });
+  }
 }
 
 export async function POST(req: NextRequest) {

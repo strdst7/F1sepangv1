@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
-import { and, desc, eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { mockups, photos, videos } from "@/db/schema";
+import { DEMO_MOCKUPS, DEMO_PHOTOS, DEMO_VIDEOS } from "@/lib/demo-data";
 
 export const runtime = "nodejs";
 
@@ -24,6 +25,10 @@ export async function GET() {
       mockups: mockRows,
     });
   } catch {
-    return NextResponse.json({ photos: [], videos: [], mockups: [] });
+    return NextResponse.json({
+      photos: DEMO_PHOTOS,
+      videos: DEMO_VIDEOS.slice(0, 3),
+      mockups: DEMO_MOCKUPS.filter((item) => item.status === "ready").slice(0, 4),
+    });
   }
 }
