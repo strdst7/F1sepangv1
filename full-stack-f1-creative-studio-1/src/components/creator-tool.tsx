@@ -32,6 +32,10 @@ type Gen = {
 
 type HistEntry = { u: string; p: string; ts: number };
 
+// Keep pre-compositing renders out of the history tray after the cleaner
+// lower-third renderer is released.
+const HISTORY_KEY = "kd-creator-history-v2";
+
 const LOADING_STEPS = [
   "Loading KD pit assets…",
   "Warming the livery…",
@@ -67,7 +71,7 @@ export default function CreatorTool() {
 
   useEffect(() => {
     try {
-      const raw = localStorage.getItem("kd-creator-history");
+      const raw = localStorage.getItem(HISTORY_KEY);
       if (raw) setHistory(JSON.parse(raw).slice(0, 4));
     } catch {
       /* ignore */
@@ -117,7 +121,7 @@ export default function CreatorTool() {
         setHistory((h) => {
           const next = [entry, ...h.filter((x) => x.u !== entry.u)].slice(0, 4);
           try {
-            localStorage.setItem("kd-creator-history", JSON.stringify(next));
+            localStorage.setItem(HISTORY_KEY, JSON.stringify(next));
           } catch {
             /* ignore */
           }
