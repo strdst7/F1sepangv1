@@ -124,6 +124,9 @@ const photo = (
 });
 
 export const DEMO_PHOTOS: PhotoItem[] = [
+  photo("demo-photo-15", "Wet grid, KD car", image("sepang-car-wet.webp"), "trackside", "demo-event-1", 218, 0, "The KD machine cuts through a wet Sepang corner."),
+  photo("demo-photo-16", "Three-car formation", image("sepang-grid-race.webp"), "trackside", "demo-event-1", 196, 0, "Three KD cars running together under the Sepang grandstand."),
+  photo("demo-photo-17", "Sepang from above", image("sepang-aerial-circuit.webp"), "drone", "demo-event-4", 241, 0, "Aerial pass over the circuit, grandstands and tropical straight."),
   photo("demo-photo-11", "Pit wall briefing", image("pit-wall-briefing.jpeg"), "pit-lane", "demo-event-3", 176, 0, "The KD crew resets between runs in the Sepang pit lane."),
   photo("demo-photo-12", "Crew conversation, garage 7", image("pit-lane-crew.jpeg"), "pit-lane", "demo-event-1", 121, 0, "A quiet moment before the next pit-lane push."),
   photo("demo-photo-13", "Pit radio interview", image("pit-radio-interview.jpeg"), "fan-moment", "demo-event-3", 148, 0, "Live from the garage lane with the KD crew."),

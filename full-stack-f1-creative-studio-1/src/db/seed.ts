@@ -102,6 +102,9 @@ const px = (
 ) => ({ title, url, category, eventId, likes, caption, createdBy: lead.id, createdAt: at(dayOffset, 16) });
 
 const PHOTOS = [
+  px("Wet grid, KD car", "/images/sepang-car-wet.webp", "trackside", e1.id, 218, 0, "The KD machine cuts through a wet Sepang corner."),
+  px("Three-car formation", "/images/sepang-grid-race.webp", "trackside", e1.id, 196, 0, "Three KD cars running together under the Sepang grandstand."),
+  px("Sepang from above", "/images/sepang-aerial-circuit.webp", "drone", e4.id, 241, 0, "Aerial pass over the circuit, grandstands and tropical straight."),
   px("Pit wall briefing", "/images/pit-wall-briefing.jpeg", "pit-lane", e3.id, 176, 0, "The KD crew resets between runs in the Sepang pit lane."),
   px("Crew conversation, garage 7", "/images/pit-lane-crew.jpeg", "pit-lane", e1.id, 121, 0, "A quiet moment before the next pit-lane push."),
   px("Pit radio interview", "/images/pit-radio-interview.jpeg", "fan-moment", e3.id, 148, 0, "Live from the garage lane with the KD crew."),
