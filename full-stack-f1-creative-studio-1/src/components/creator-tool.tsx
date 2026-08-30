@@ -165,9 +165,17 @@ export default function CreatorTool() {
   const showFallback = gen.status === "fallback";
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[22.5rem_1fr]">
+    <div className="grid items-start gap-6 lg:grid-cols-[20rem_minmax(0,1fr)] xl:grid-cols-[22.5rem_minmax(0,1fr)]">
       {/* ------------ Controls ------------ */}
-      <div className="h-fit space-y-5 rounded-2xl border border-carbon-700 bg-carbon-850 p-5 lg:sticky lg:top-24">
+      <aside className="h-fit space-y-5 rounded-3xl border border-carbon-700 bg-carbon-850/95 p-5 shadow-[0_24px_70px_-42px_rgba(163,230,53,0.55)] lg:sticky lg:top-24">
+        <div className="flex items-start justify-between gap-4 border-b border-carbon-700 pb-4">
+          <div>
+            <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-acid-400">Control deck</p>
+            <p className="mt-1 font-display text-base font-semibold text-ink-100">Build your KD mark</p>
+          </div>
+          <Chip tone="acid">Live</Chip>
+        </div>
+
         <div>
           <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.25em] text-ink-500">1 · Product</p>
           <div className="grid grid-cols-2 gap-1.5">
@@ -320,10 +328,21 @@ export default function CreatorTool() {
         <p className="text-center font-mono text-[9px] uppercase tracking-[0.2em] text-ink-500">
           Open web · no account · the KD look, stamped with your name
         </p>
-      </div>
+      </aside>
 
       {/* ------------ Stage ------------ */}
-      <div className="space-y-4">
+      <section className="min-w-0 space-y-4">
+        <div className="flex items-center justify-between gap-3 px-1">
+          <div>
+            <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-acid-400">Output bay</p>
+            <p className="mt-1 font-display text-lg font-semibold">Live preview</p>
+          </div>
+          <div className="flex items-center gap-2 rounded-full border border-carbon-700 bg-carbon-850 px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider text-ink-500">
+            <span className="h-1.5 w-1.5 rounded-full bg-acid-400 pulse-dot" />
+            {opts.aspect} · {gen.status === "idle" ? "Ready" : gen.status}
+          </div>
+        </div>
+
         <div
           className={cn(
             "relative overflow-hidden rounded-2xl border bg-carbon-850",
@@ -331,7 +350,7 @@ export default function CreatorTool() {
           )}
         >
           {gen.status === "idle" && (
-            <div className={cn("grid place-items-center", STAGE_ASPECT[opts.aspect], "min-h-[22rem]")}>
+            <div className={cn("grid place-items-center", STAGE_ASPECT[opts.aspect], "min-h-[22rem] lg:max-h-[calc(100vh-9rem)]")}>
               <div className="text-center">
                 <span className="mx-auto grid h-16 w-16 place-items-center rounded-2xl border border-carbon-600 bg-carbon-800 text-ink-500">
                   <Icon name="sparkles" className="h-7 w-7" strokeWidth={1.6} />
@@ -345,7 +364,7 @@ export default function CreatorTool() {
           )}
 
           {gen.status === "loading" && (
-            <div className={cn("relative grid place-items-center bg-carbon-900", STAGE_ASPECT[opts.aspect])}>
+            <div className={cn("relative grid place-items-center bg-carbon-900 lg:max-h-[calc(100vh-9rem)]", STAGE_ASPECT[opts.aspect])}>
               <div className="speedlines absolute inset-0" aria-hidden />
               <img
                 src={gen.source}
@@ -377,7 +396,7 @@ export default function CreatorTool() {
           )}
 
           {gen.status === "ready" && (
-            <div className={cn("relative", STAGE_ASPECT[opts.aspect], "bg-carbon-900")}>
+            <div className={cn("relative lg:max-h-[calc(100vh-9rem)]", STAGE_ASPECT[opts.aspect], "bg-carbon-900")}>
               <img src={gen.url} alt="KD creation" className="h-full w-full object-cover" />
               <div className="absolute inset-x-0 bottom-0 flex flex-wrap items-center gap-2 bg-gradient-to-t from-carbon-950/90 to-transparent p-4 pt-10">
                 <button
@@ -415,7 +434,7 @@ export default function CreatorTool() {
           )}
 
           {showFallback && (
-            <div className={cn("relative", STAGE_ASPECT[opts.aspect], "bg-carbon-900")}>
+            <div className={cn("relative lg:max-h-[calc(100vh-9rem)]", STAGE_ASPECT[opts.aspect], "bg-carbon-900")}>
               <img src={gen.fallback} alt="KD vector mockup" className="h-full w-full object-cover" />
               <div className="absolute inset-x-0 bottom-0 flex flex-wrap items-center gap-2 bg-gradient-to-t from-carbon-950/90 to-transparent p-4 pt-10">
                 <Chip tone="amber">Offline KD render</Chip>
@@ -472,7 +491,7 @@ export default function CreatorTool() {
             <p className="font-mono text-[11px] leading-relaxed text-ink-400">{gen.prompt}</p>
           </div>
         )}
-      </div>
+      </section>
     </div>
   );
 }
