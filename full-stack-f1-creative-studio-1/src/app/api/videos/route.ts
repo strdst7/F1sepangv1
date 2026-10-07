@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { desc, eq, or, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { events, videos } from "@/db/schema";
+import { DEMO_VIDEOS } from "@/lib/demo-data";
 import { getSessionUser } from "@/lib/auth";
 
 export const runtime = "nodejs";
@@ -15,20 +16,25 @@ export async function GET(req: NextRequest) {
   if (kind && kind !== "all") conditions.push(eq(videos.kind, kind));
   if (q) conditions.push(sql`lower(${videos.title}) like ${`%${q}%`}`);
 
-  const rows = await db
-    .select({ video: videos, eventLabel: events.name })
-    .from(videos)
-    .leftJoin(events, eq(videos.eventId, events.id))
-    .where(conditions.length ? (conditions.length === 1 ? conditions[0] : or(...conditions)) : undefined)
-    .orderBy(desc(videos.createdAt));
+  try {
+    const rows = await db
+      .select({ video: videos, eventLabel: events.name })
+      .from(videos)
+      .leftJoin(events, eq(videos.eventId, events.id))
+      .where(conditions.length ? (conditions.length === 1 ? conditions[0] : or(...conditions)) : undefined)
+      .orderBy(desc(videos.createdAt));
 
-  return NextResponse.json({
-    items: rows.map((r) => ({
-      ...r.video,
-      eventLabel: r.eventLabel,
-      createdAt: r.video.createdAt,
-    })),
-  });
+    return NextResponse.json({
+      items: rows.map((r) => ({
+        ...r.video,
+        eventLabel: r.eventLabel,
+        createdAt: r.video.createdAt,
+      })),
+    });
+  } catch {
+    // Read-only demo fallback keeps thumbnails and sample clips visible.
+    return NextResponse.json({ items: DEMO_VIDEOS });
+  }
 }
 
 export async function POST(req: NextRequest) {

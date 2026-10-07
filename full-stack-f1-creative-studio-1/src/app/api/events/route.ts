@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { asc, eq, or, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { events } from "@/db/schema";
+import { DEMO_EVENTS } from "@/lib/demo-data";
 import { getSessionUser } from "@/lib/auth";
 
 export const runtime = "nodejs";
@@ -15,12 +16,17 @@ export async function GET(req: NextRequest) {
   if (kind && kind !== "all") conditions.push(eq(events.kind, kind));
   if (q) conditions.push(sql`lower(${events.name}) like ${`%${q}%`}`);
 
-  const rows = await db
-    .select()
-    .from(events)
-    .where(conditions.length ? (conditions.length === 1 ? conditions[0] : or(...conditions)) : undefined)
-    .orderBy(asc(events.date));
-  return NextResponse.json({ items: rows });
+  try {
+    const rows = await db
+      .select()
+      .from(events)
+      .where(conditions.length ? (conditions.length === 1 ? conditions[0] : or(...conditions)) : undefined)
+      .orderBy(asc(events.date));
+    return NextResponse.json({ items: rows });
+  } catch {
+    // Keep the public demo useful if Postgres is not configured or is asleep.
+    return NextResponse.json({ items: DEMO_EVENTS });
+  }
 }
 
 export async function POST(req: NextRequest) {

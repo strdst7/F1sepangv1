@@ -102,6 +102,21 @@ const px = (
 ) => ({ title, url, category, eventId, likes, caption, createdBy: lead.id, createdAt: at(dayOffset, 16) });
 
 const PHOTOS = [
+  px("KD pit portrait", "/images/ambassador-pit-portrait.jpeg", "paddock", e5.id, 132, 0, "A KD ambassador between garage runs."),
+  px("Pit-lane walk", "/images/female-pit-walk.jpeg", "pit-lane", e3.id, 154, 0, "Walking the line before the next session."),
+  px("Helmet check", "/images/male-helmet-pit.jpeg", "detail", e1.id, 119, 0, "Driver and helmet ready for the next run."),
+  px("Crew together", "/images/crew-group-pit.jpeg", "fan-moment", e2.id, 188, 0, "The KD crew in the pit lane."),
+  px("Race-day announcement", "/images/ambassador-announcer.jpeg", "fan-moment", e3.id, 167, 0, "Live from the Sepang pit wall."),
+  px("Garage-side wrench", "/images/female-pit-wrench.jpeg", "pit-lane", e5.id, 146, 0, "A quiet setup moment before lights out."),
+  px("Pit-stop focus", "/images/male-pit-stop.jpeg", "pit-lane", e1.id, 173, 0, "Hands, tools and a fast turnaround."),
+  px("Pit-wall ambassador", "/images/female-pit-wall.jpeg", "paddock", e2.id, 141, 0, "Ready for the next fan walk."),
+  px("Wet grid, KD car", "/images/sepang-car-wet.webp", "trackside", e1.id, 218, 0, "The KD machine cuts through a wet Sepang corner."),
+  px("Three-car formation", "/images/sepang-grid-race.webp", "trackside", e1.id, 196, 0, "Three KD cars running together under the Sepang grandstand."),
+  px("Sepang from above", "/images/sepang-aerial-circuit.webp", "drone", e4.id, 241, 0, "Aerial pass over the circuit, grandstands and tropical straight."),
+  px("Pit wall briefing", "/images/pit-wall-briefing.jpeg", "pit-lane", e3.id, 176, 0, "The KD crew resets between runs in the Sepang pit lane."),
+  px("Crew conversation, garage 7", "/images/pit-lane-crew.jpeg", "pit-lane", e1.id, 121, 0, "A quiet moment before the next pit-lane push."),
+  px("Pit radio interview", "/images/pit-radio-interview.jpeg", "fan-moment", e3.id, 148, 0, "Live from the garage lane with the KD crew."),
+  px("Golden car, Sepang straight", "/images/sepang-golden-car.jpeg", "trackside", e6.id, 204, 0, "Neon lime through the palms at golden hour."),
   px("Chequered moment, T103", "https://images.pexels.com/photos/29252117/pexels-photo-29252117.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200", "trackside", e1.id, 128, -1, "1/4000 · f/2.8 · ISO 200 — sparks at the line"),
   px("Turn 4 dive — brake lights", "https://images.pexels.com/photos/28680795/pexels-photo-28680795.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200", "trackside", e1.id, 96, -2, "Heavy into the 4th, 312 km/h out"),
   px("Chicane exit, 312 km/h", "https://images.pexels.com/photos/28832062/pexels-photo-28832062.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200", "trackside", e1.id, 74, -2, "Pan shot, 1/2000 at full throttle"),

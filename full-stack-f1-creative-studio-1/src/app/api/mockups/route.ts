@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { desc, eq, or, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { events, mockups } from "@/db/schema";
+import { DEMO_MOCKUPS } from "@/lib/demo-data";
 import { getSessionUser } from "@/lib/auth";
 
 export const runtime = "nodejs";
@@ -18,20 +19,25 @@ export async function GET(req: NextRequest) {
       sql`lower(${mockups.title}) like ${`%${q}%`} or lower(${mockups.prompt}) like ${`%${q}%`}`
     );
 
-  const rows = await db
-    .select({ mockup: mockups, eventLabel: events.name })
-    .from(mockups)
-    .leftJoin(events, eq(mockups.eventId, events.id))
-    .where(conditions.length ? (conditions.length === 1 ? conditions[0] : or(...conditions)) : undefined)
-    .orderBy(desc(mockups.createdAt));
+  try {
+    const rows = await db
+      .select({ mockup: mockups, eventLabel: events.name })
+      .from(mockups)
+      .leftJoin(events, eq(mockups.eventId, events.id))
+      .where(conditions.length ? (conditions.length === 1 ? conditions[0] : or(...conditions)) : undefined)
+      .orderBy(desc(mockups.createdAt));
 
-  return NextResponse.json({
-    items: rows.map((r) => ({
-      ...r.mockup,
-      eventLabel: r.eventLabel,
-      createdAt: r.mockup.createdAt,
-    })),
-  });
+    return NextResponse.json({
+      items: rows.map((r) => ({
+        ...r.mockup,
+        eventLabel: r.eventLabel,
+        createdAt: r.mockup.createdAt,
+      })),
+    });
+  } catch {
+    // The creator and library remain usable in demo mode without Postgres.
+    return NextResponse.json({ items: DEMO_MOCKUPS });
+  }
 }
 
 export async function POST(req: NextRequest) {
