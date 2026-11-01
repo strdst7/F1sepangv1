@@ -1,0 +1,7 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/full-stack-f1-creative-studio-1"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
